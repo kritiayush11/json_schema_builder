@@ -1,3 +1,7 @@
+to run pls visit 
+(https://json-schema-builder-red-mu.vercel.app/)
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
