@@ -1,73 +1,121 @@
-to run pls visit 
-(https://json-schema-builder-red-mu.vercel.app/)
+Visit: (https://json-schema-builder-red-mu.vercel.app/)
 
 
-# React + TypeScript + Vite
+# JSON Schema Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A flexible and powerful library for programmatically building, modifying, and validating [JSON Schema](https://json-schema.org/) definitions in JavaScript/TypeScript. The JSON Schema Builder aims to simplify the process of generating dynamic and complex schema structures for APIs, form validation, data modeling, and more.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Fluent API:** Easily compose schemas using chainable methods.
+- **TypeScript Support:** Full typings for development experience and code completion.
+- **Validation:** Validate data against built schemas.
+- **Extensible:** Create reusable schema fragments and combine them.
+- **JSON Schema Draft Support:** Compatible with JSON Schema Draft-07 and beyond.
+- **Serialization:** Export schemas as plain JSON for interoperability.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install json_schema_builder
+# or
+yarn add json_schema_builder
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Usage
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+### Basic Example
+
+```javascript
+const { SchemaBuilder } = require('json_schema_builder');
+
+const userSchema = new SchemaBuilder()
+  .object()
+  .prop('id', s => s.integer().minimum(1).required())
+  .prop('username', s => s.string().minLength(3).required())
+  .prop('email', s => s.string().format('email'))
+  .build();
+
+console.log(JSON.stringify(userSchema, null, 2));
+```
+
+### Advanced Example
+
+```javascript
+const { SchemaBuilder } = require('json_schema_builder');
+
+const addressSchema = new SchemaBuilder()
+  .object()
+  .prop('street', s => s.string().required())
+  .prop('city', s => s.string().required())
+  .prop('zipcode', s => s.string().pattern('^\\d{5}$'))
+  .build();
+
+const userSchema = new SchemaBuilder()
+  .object()
+  .prop('name', s => s.string().required())
+  .prop('address', s => s.schema(addressSchema))
+  .build();
+```
+
+---
+
+## API Reference
+
+### Core Classes
+
+- **SchemaBuilder**: The main class for composing schemas.
+- **.object()**: Start an object schema.
+- **.prop(key, schemaFn)**: Add a property with its own schema.
+- **.array()**: Define an array schema.
+- **.string(), .integer(), .boolean(), .number()**: Define primitive types.
+- **.required()**: Mark a field as required.
+- **.enum([...])**: Restrict to specific values.
+- **.build()**: Export the schema as plain JSON.
+
+### Validation
+
+```javascript
+const { validate } = require('json_schema_builder');
+
+const schema = ...; // your built schema
+const { valid, errors } = validate(schema, data);
+```
+
+---
+
+## Contribution
+
+We welcome contributions! To get started:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Make your changes and include tests if relevant.
+4. Open a pull request describing your changes.
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md) (if available).
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Support & Contact
+
+For issues or feature requests, please open an [issue](https://github.com/kritiayush11/json_schema_builder/issues).
+
+For questions or other inquiries, reach out to [kritiayush11](https://github.com/kritiayush11).
+
+---
   },
 ])
 ```
